@@ -131,7 +131,7 @@ mod shader {
     varying lowp vec2 texcoord;
     void main() {
         gl_Position = vec4(pos + offset, 0, 1);
-        texcoord = uv;
+        texcoord = vec2(uv.s, 1.0 - uv.t);
     }"#;
 
     pub const FRAGMENT: &str = r#"#version 100
