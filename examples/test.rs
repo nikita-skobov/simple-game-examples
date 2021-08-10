@@ -11,6 +11,10 @@ impl GameLoop for MyGameLoop {
     fn draw(&mut self) -> backend::TextureUpdate {
         backend::TextureUpdate::UpdatePart(0, 0, 10, 10, vec![200; 10 * 10 * 4])
     }
+
+    fn init_canvas(&mut self, width: usize, height: usize) -> Vec<u8> {
+        vec![0; width * height * 4]
+    }
 }
 
 fn main() {

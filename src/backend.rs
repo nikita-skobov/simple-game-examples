@@ -3,11 +3,11 @@ use miniquad::{UserData, conf, EventHandler, Context, Pipeline, Bindings, Buffer
 pub trait GameLoop {
     fn update(&mut self);
     fn draw(&mut self) -> TextureUpdate;
+    fn init_canvas(&mut self, width: usize, height: usize) -> Vec<u8>;
 }
 
 pub trait Backend<T: GameLoop> {
     fn start(_game_loop: T) where Self: Sized + 'static {}
-    fn init_canvas(width: usize, height: usize) -> Vec<u8>;
 }
 
 pub enum TextureUpdate {
@@ -70,10 +70,6 @@ impl<T: GameLoop> Backend<T> for MQBackend<T> {
             UserData::owning(init_obj, ctx)
         });
     }
-
-    fn init_canvas(width: usize, height: usize) -> Vec<u8> {
-        vec![0; width * height * 4]
-    }
 }
 
 impl<T: GameLoop> MQBackend<T> {
@@ -92,7 +88,8 @@ impl<T: GameLoop> MQBackend<T> {
 
         let (width, height) = ctx.screen_size();
         let (width, height) = (width as usize, height as usize);
-        let pixels = <MQBackend<T> as Backend<T>>::init_canvas(width, height);
+        let mut game_loop = game_loop;
+        let pixels = game_loop.init_canvas(width, height);
         let screen_width = width as u16;
         let screen_height = height as u16;
         let texture = Texture::from_rgba8(ctx, screen_width, screen_height, &pixels);
