@@ -1,12 +1,13 @@
 use miniquad::{UserData, conf, EventHandler, Context, Pipeline, Bindings, Buffer, BufferType, Texture, Shader, BufferLayout, VertexAttribute, VertexFormat};
 
-use super::Canvas;
+pub trait GameLoop {
+    fn update(&mut self);
+    fn draw(&mut self) -> TextureUpdate;
+}
 
-pub trait Backend {
-    fn start() where Self: Sized + 'static {}
+pub trait Backend<T: GameLoop> {
+    fn start(_game_loop: T) where Self: Sized + 'static {}
     fn init_canvas(width: usize, height: usize) -> Vec<u8>;
-
-    fn bdraw(&mut self) -> TextureUpdate;
 }
 
 pub enum TextureUpdate {
@@ -27,21 +28,22 @@ struct Vertex {
     uv: Vec2,
 }
 
-pub struct MQBackend {
+pub struct MQBackend<T: GameLoop> {
     pipeline: Pipeline,
     bindings: Bindings,
     screen_width: u16,
     screen_height: u16,
+    game_loop: T,
 }
 
-impl EventHandler for MQBackend {
+impl<T: GameLoop> EventHandler for MQBackend<T> {
     fn update(&mut self, _ctx: &mut Context) {
-        // Backend::update(self);
+        self.game_loop.update();
     }
 
     fn draw(&mut self, ctx: &mut Context) {
         ctx.begin_default_pass(Default::default());
-        let texture_update = self.bdraw();
+        let texture_update = self.game_loop.draw();
         match texture_update {
             TextureUpdate::None => {}
             TextureUpdate::UpdateWhole(new_pixels) => {
@@ -61,10 +63,10 @@ impl EventHandler for MQBackend {
     }
 }
 
-impl Backend for MQBackend {
-    fn start() where Self: Sized + 'static {
+impl<T: GameLoop> Backend<T> for MQBackend<T> {
+    fn start(game_loop: T) where Self: Sized + 'static {
         miniquad::start(conf::Conf::default(), |mut ctx| {
-            let init_obj = MQBackend::initialize(&mut ctx);
+            let init_obj = MQBackend::initialize(&mut ctx, game_loop);
             UserData::owning(init_obj, ctx)
         });
     }
@@ -72,14 +74,10 @@ impl Backend for MQBackend {
     fn init_canvas(width: usize, height: usize) -> Vec<u8> {
         vec![0; width * height * 4]
     }
-
-    fn bdraw(&mut self) -> TextureUpdate {
-        todo!()
-    }
 }
 
-impl MQBackend {
-    fn initialize(ctx: &mut Context) -> MQBackend {
+impl<T: GameLoop> MQBackend<T> {
+    fn initialize(ctx: &mut Context, game_loop: T,) -> MQBackend<T> {
         #[rustfmt::skip]
         let vertices: [Vertex; 4] = [
             Vertex { pos : Vec2 { x: -1.0, y: -1.0 }, uv: Vec2 { x: 0., y: 0. } },
@@ -94,7 +92,7 @@ impl MQBackend {
 
         let (width, height) = ctx.screen_size();
         let (width, height) = (width as usize, height as usize);
-        let pixels = <MQBackend as Backend>::init_canvas(width, height);
+        let pixels = <MQBackend<T> as Backend<T>>::init_canvas(width, height);
         let screen_width = width as u16;
         let screen_height = height as u16;
         let texture = Texture::from_rgba8(ctx, screen_width, screen_height, &pixels);
@@ -117,7 +115,7 @@ impl MQBackend {
             shader,
         );
 
-        MQBackend { pipeline, bindings, screen_width, screen_height }
+        MQBackend { pipeline, bindings, screen_width, screen_height, game_loop }
     }
 }
 
