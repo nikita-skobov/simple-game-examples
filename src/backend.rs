@@ -1,5 +1,41 @@
 use miniquad::{UserData, conf, EventHandler, Context, Pipeline, Bindings, Buffer, BufferType, Texture, Shader, BufferLayout, VertexAttribute, VertexFormat};
 
+
+/// copied from miniquad Conf and modified to remove
+/// parts that arent relevant to us.
+#[derive(Debug)]
+pub struct BackendConf {
+    /// Title of the window, defaults to an empty string.
+    pub window_title: String,
+    /// The preferred width of the window, ignored on wasm/android.
+    ///
+    /// Default: 800
+    pub window_width: i32,
+    /// The preferred height of the window, ignored on wasm/android.
+    ///
+    /// Default: 600
+    pub window_height: i32,
+    /// Whether the window should be created in fullscreen mode, ignored on wasm/android.
+    ///
+    /// Default: false
+    pub fullscreen: bool,
+    /// Determines if the application user can resize the window
+    pub window_resizable: bool,
+}
+
+impl Default for BackendConf {
+    fn default() -> BackendConf {
+        BackendConf {
+            window_title: "".to_owned(),
+            window_width: 800,
+            window_height: 600,
+            fullscreen: false,
+            window_resizable: true,
+        }
+    }
+}
+
+
 pub trait GameLoop {
     fn update(&mut self);
     fn draw(&mut self) -> TextureUpdate;
@@ -7,7 +43,7 @@ pub trait GameLoop {
 }
 
 pub trait Backend<T: GameLoop> {
-    fn start(_game_loop: T) where Self: Sized + 'static {}
+    fn start(_conf: BackendConf, _game_loop: T) where Self: Sized + 'static {}
 }
 
 pub enum TextureUpdate {
@@ -64,8 +100,14 @@ impl<T: GameLoop> EventHandler for MQBackend<T> {
 }
 
 impl<T: GameLoop> Backend<T> for MQBackend<T> {
-    fn start(game_loop: T) where Self: Sized + 'static {
-        miniquad::start(conf::Conf::default(), |mut ctx| {
+    fn start(bconf: BackendConf, game_loop: T) where Self: Sized + 'static {
+        let mut conf = conf::Conf::default();
+        conf.fullscreen = bconf.fullscreen;
+        conf.window_height = bconf.window_height;
+        conf.window_width = bconf.window_width;
+        conf.window_title = bconf.window_title;
+        conf.window_resizable = bconf.window_resizable;
+        miniquad::start(conf, |mut ctx| {
             let init_obj = MQBackend::initialize(&mut ctx, game_loop);
             UserData::owning(init_obj, ctx)
         });

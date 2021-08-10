@@ -1,5 +1,5 @@
 use simple_game_examples::backend;
-use backend::{GameLoop, Backend};
+use backend::{GameLoop, Backend, BackendConf};
 
 pub struct MyGameLoop {
 
@@ -19,5 +19,12 @@ impl GameLoop for MyGameLoop {
 
 fn main() {
     let my_loop = MyGameLoop {};
-    backend::MQBackend::start(my_loop);
+    let my_conf = BackendConf {
+        window_title: "hello world!".into(),
+        window_width: 400,
+        window_height: 800,
+        fullscreen: false,
+        window_resizable: true,
+    };
+    backend::MQBackend::start(my_conf, my_loop);
 }
