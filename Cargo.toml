@@ -10,3 +10,7 @@ miniquad = { git = "https://github.com/not-fl3/miniquad" }
 image = "0.23.14"
 
 # [dev-dependencies]
+
+[profile.release]
+lto = true
+opt-level = 3
