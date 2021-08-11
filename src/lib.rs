@@ -74,6 +74,7 @@ impl Canvas {
     }
 
     pub fn set_pixel(&mut self, x: usize, y: usize, color: Rgb) {
+        if x >= self.width || y >= self.height { return; }
         let red_index = get_red_index!(self, x, y);
         self.set_pixel_from_index(red_index, color);
     }
@@ -107,15 +108,21 @@ impl Canvas {
     }
 
     pub fn draw_diagonal_line(&mut self, x1: usize, y1: usize, x2: usize, y2: usize, color: Rgb) {
-        let distance_x = x2 - x1;
-        let distance_y = y2 - y1;
+        let (distance_x, negative_x) = if x2 > x1 {
+            (x2 - x1, false)
+        } else { (x1 - x2, true) };
+        let (distance_y, negative_y) = if y2 > y1 {
+            (y2 - y1, false)
+        } else { (y1 - y2, true) };
         let num_steps = if distance_x > distance_y {
             distance_x
         } else {
             distance_y
         };
-        let step_x = distance_x as f32 / num_steps as f32;
-        let step_y = distance_y as f32 / num_steps as f32;
+        let mut step_x = distance_x as f32 / num_steps as f32;
+        let mut step_y = distance_y as f32 / num_steps as f32;
+        if negative_x { step_x *= -1.0 }
+        if negative_y { step_y *= -1.0 }
         let mut next_x = x1 as f32;
         let mut next_y = y1 as f32;
         for _ in 0..num_steps {
