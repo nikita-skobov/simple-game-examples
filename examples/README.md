@@ -10,3 +10,4 @@ The features are in order:
 4. `simple_grid`: Shows that we can use the Canvas api in `src/lib.rs` to draw lines
 5. `tilted_grid`: Shows logic of printing diagonal tiles.
 6. `tiled_map`: Expands on `tilted_grid` to move code into seperate functions, and renders on top of an abstraction of a game map that transforms the map coordinates to screen coordinates.
+7. `events`: Shows that we can process events (only applicable to certain backends obviously)
