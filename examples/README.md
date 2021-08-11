@@ -12,3 +12,4 @@ The features are in order:
 6. `tiled_map`: Expands on `tilted_grid` to move code into seperate functions, and renders on top of an abstraction of a game map that transforms the map coordinates to screen coordinates.
 7. `events`: Shows that we can process events (only applicable to certain backends obviously)
 8. `event_state`: Shows that we can keep track of our own state in response to events we see. For example, we can always know the current position of the mouse so that we can use that in the draw function instead of having to ask the backend to track that for us.
+9. `tiled_map_select`: Shows that we can properly map back and forth between map and screen coordinates. a red box should appear around the tile you have selected.

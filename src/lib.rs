@@ -15,6 +15,51 @@ pub struct Rgb {
     pub blue: u8,
 }
 
+#[derive(Debug, Copy, Clone)]
+pub struct Point {
+    pub x: usize,
+    pub y: usize,
+}
+
+impl From<(usize, usize)> for Point {
+    fn from(orig: (usize, usize)) -> Self {
+        Point {
+            x: orig.0,
+            y: orig.1,
+        }
+    }
+}
+
+#[derive(Debug, Copy, Clone)]
+pub struct LineSegment {
+    pub p1: Point,
+    pub p2: Point,
+}
+
+impl LineSegment {
+    pub fn ccw(a: &Point, b: &Point, c: &Point) -> bool {
+        (c.y as isize - a.y as isize) * (b.x as isize - a.x as isize) > (b.y as isize - a.y as isize) * (c.x as isize - a.x as isize)
+    }
+
+    pub fn intersects(&self, ls2: LineSegment) -> bool {
+        let a = &self.p1;
+        let b = &self.p2;
+        let c = &ls2.p1;
+        let d = &ls2.p2;
+        LineSegment::ccw(a, c, d) != LineSegment::ccw(b, c, d)
+            && LineSegment::ccw(a, b, c) != LineSegment::ccw(a, b, d)
+    }
+}
+
+impl From<(Point, Point)> for LineSegment {
+    fn from(orig: (Point, Point)) -> Self {
+        LineSegment {
+            p1: orig.0,
+            p2: orig.1,
+        }
+    }
+}
+
 impl Rgb {
     pub const RED: Rgb = Rgb { red: 255, green: 0, blue: 0 };
     pub const BLUE: Rgb = Rgb { red: 0, green: 0, blue: 255 };
