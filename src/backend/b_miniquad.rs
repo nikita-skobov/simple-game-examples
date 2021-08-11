@@ -19,11 +19,94 @@ pub struct MQBackend<T: GameLoop> {
     screen_width: u16,
     screen_height: u16,
     game_loop: T,
+    events: Vec<Event>,
 }
 
 impl<T: GameLoop> EventHandler for MQBackend<T> {
     fn update(&mut self, _ctx: &mut Context) {
-        self.game_loop.update();
+        let events = self.events.drain(..).collect();
+        self.events = vec![];
+        self.game_loop.update(events);
+    }
+
+    fn key_down_event(
+        &mut self,
+        _ctx: &mut Context,
+        keycode: miniquad::KeyCode,
+        keymods: miniquad::KeyMods,
+        repeat: bool,
+    ) {
+        let code: u32 = keycode as u32;
+        let event = Event::KeyDown {
+            modifier: KeyMods {
+                shift: keymods.shift,
+                ctrl: keymods.ctrl,
+                alt: keymods.alt,
+                logo: keymods.logo,
+            },
+            code: KeyCode::from(code),
+            repeated: repeat,
+        };
+        self.events.push(event);
+    }
+
+    fn key_up_event(
+        &mut self,
+        _ctx: &mut Context,
+        keycode: miniquad::KeyCode,
+        keymods: miniquad::KeyMods,
+    ) {
+        let code: u32 = keycode as u32;
+        let event = Event::KeyUp {
+            modifier: KeyMods {
+                shift: keymods.shift,
+                ctrl: keymods.ctrl,
+                alt: keymods.alt,
+                logo: keymods.logo,  
+            },
+            code: KeyCode::from(code),
+        };
+        self.events.push(event);
+    }
+
+    fn mouse_button_down_event(
+        &mut self,
+        _ctx: &mut Context,
+        button: miniquad::MouseButton,
+        x: f32,
+        y: f32,
+    ) {
+        let event = Event::MouseDown {
+            button: match button {
+                miniquad::MouseButton::Right => MouseButton::Right,
+                miniquad::MouseButton::Left => MouseButton::Left,
+                miniquad::MouseButton::Middle => MouseButton::Middle,
+                miniquad::MouseButton::Unknown => MouseButton::Unknown,
+            },
+            x,
+            y,
+        };
+        self.events.push(event);
+    }
+
+    fn mouse_button_up_event(
+        &mut self,
+        _ctx: &mut Context,
+        button: miniquad::MouseButton,
+        x: f32,
+        y: f32,
+    ) {
+        let event = Event::MouseUp {
+            button: match button {
+                miniquad::MouseButton::Right => MouseButton::Right,
+                miniquad::MouseButton::Left => MouseButton::Left,
+                miniquad::MouseButton::Middle => MouseButton::Middle,
+                miniquad::MouseButton::Unknown => MouseButton::Unknown,
+            },
+            x,
+            y,
+        };
+        self.events.push(event);
     }
 
     fn draw(&mut self, ctx: &mut Context) {
@@ -108,7 +191,14 @@ impl<T: GameLoop> MQBackend<T> {
             shader,
         );
 
-        MQBackend { pipeline, bindings, screen_width, screen_height, game_loop }
+        MQBackend {
+            pipeline,
+            bindings,
+            screen_width,
+            screen_height,
+            game_loop,
+            events: vec![],
+        }
     }
 }
 

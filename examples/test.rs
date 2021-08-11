@@ -1,5 +1,5 @@
 use simple_game_examples::backend;
-use backend::{GameLoop, Backend, BackendConf};
+use backend::{GameLoop, Backend, BackendConf, Event};
 
 #[derive(Default, Clone)]
 pub struct MyGameLoop {
@@ -11,7 +11,7 @@ pub struct MyGameLoop {
 }
 
 impl GameLoop for MyGameLoop {
-    fn update(&mut self) {}
+    fn update(&mut self, _events: Vec<Event>) {}
 
     fn draw(&mut self) -> backend::TextureUpdate {
         if self.red == 0 {

@@ -5,8 +5,6 @@ use backend::{GameLoop, Backend, BackendConf};
 pub struct MyGameLoop {}
 
 impl GameLoop for MyGameLoop {
-    fn update(&mut self) {}
-
     fn draw(&mut self) -> backend::TextureUpdate {
         backend::TextureUpdate::None
     }
@@ -23,6 +21,8 @@ impl GameLoop for MyGameLoop {
         }
         data
     }
+
+    fn update(&mut self, _events: Vec<backend::Event>) {}
 }
 
 fn main() {

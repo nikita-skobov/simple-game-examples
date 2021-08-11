@@ -1,11 +1,11 @@
 use simple_game_examples::backend;
-use backend::{GameLoop, Backend, BackendConf, ImageBackend, MQBackend};
+use backend::{GameLoop, Backend, BackendConf, ImageBackend, MQBackend, Event};
 
 #[derive(Default, Clone)]
 pub struct MyGameLoop {}
 
 impl GameLoop for MyGameLoop {
-    fn update(&mut self) {}
+    fn update(&mut self, _events: Vec<Event>) {}
 
     fn draw(&mut self) -> backend::TextureUpdate {
         backend::TextureUpdate::None

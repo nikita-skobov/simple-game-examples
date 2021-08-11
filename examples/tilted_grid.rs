@@ -1,6 +1,6 @@
 use simple_game_examples::backend;
 use simple_game_examples::{Rgb, Canvas};
-use backend::{GameLoop, Backend, BackendConf};
+use backend::{GameLoop, Backend, BackendConf, Event};
 
 pub struct Tile {
     pub color: Rgb,
@@ -32,7 +32,7 @@ pub struct MyGameLoop {
 }
 
 impl GameLoop for MyGameLoop {
-    fn update(&mut self) {}
+    fn update(&mut self, _events: Vec<Event>) {}
 
     fn draw(&mut self) -> backend::TextureUpdate {
         backend::TextureUpdate::None
