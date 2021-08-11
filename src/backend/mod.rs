@@ -308,9 +308,11 @@ impl From<u32> for KeyCode {
     }
 }
 
+#[derive(Debug)]
 pub enum Event {
     MouseDown { button: MouseButton, x: f32, y: f32 },
     MouseUp { button: MouseButton, x: f32, y: f32 },
+    MouseMove { x: f32, y: f32 },
     KeyDown { modifier: KeyMods, code: KeyCode, repeated: bool },
     KeyUp { modifier: KeyMods, code: KeyCode },
 }

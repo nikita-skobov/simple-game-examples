@@ -109,6 +109,16 @@ impl<T: GameLoop> EventHandler for MQBackend<T> {
         self.events.push(event);
     }
 
+    fn mouse_motion_event(
+        &mut self,
+        _ctx: &mut Context,
+        x: f32,
+        y: f32
+    ) {
+        let event = Event::MouseMove { x, y };
+        self.events.push(event);
+    }
+
     fn draw(&mut self, ctx: &mut Context) {
         ctx.begin_default_pass(Default::default());
         let texture_update = self.game_loop.draw();
