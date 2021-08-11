@@ -151,7 +151,11 @@ impl GameMap {
         if selected_cell_x < 0 || selected_cell_y < 0 {
             return None;
         }
-        Some((selected_cell_x as usize, selected_cell_y as usize))
+        let (selected_cell_x, selected_cell_y) = (selected_cell_x as usize, selected_cell_y as usize);
+        if selected_cell_x >= self.map_size.0 || selected_cell_y >= self.map_size.1 {
+            return None;
+        }
+        Some((selected_cell_x, selected_cell_y))
     }
 
     pub fn draw_tile(&self, x: usize, y: usize, canvas: &mut Canvas) {
