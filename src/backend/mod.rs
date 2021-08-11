@@ -6,7 +6,7 @@ pub use b_image::*;
 
 /// copied from miniquad Conf and modified to remove
 /// parts that arent relevant to us.
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct BackendConf {
     /// Title of the window, defaults to an empty string.
     pub window_title: String,
