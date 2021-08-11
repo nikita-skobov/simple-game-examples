@@ -29,19 +29,19 @@ impl<T: GameLoop> EventHandler for MQBackend<T> {
     fn draw(&mut self, ctx: &mut Context) {
         ctx.begin_default_pass(Default::default());
         let texture_update = self.game_loop.draw();
+        ctx.apply_pipeline(&self.pipeline);
+        ctx.apply_bindings(&self.bindings);
         match texture_update {
             TextureUpdate::None => {}
             TextureUpdate::UpdateWhole(new_pixels) => {
-                let texture = Texture::from_rgba8(ctx, self.screen_width, self.screen_height, &new_pixels);
-                self.bindings.images[0] = texture;
+                let texture = &mut self.bindings.images[0];
+                texture.update(ctx, new_pixels);
             }
             TextureUpdate::UpdatePart(x_offset, y_offset, width, height, pixel_slice) => {
                 let texture = &mut self.bindings.images[0];
                 texture.update_texture_part(ctx, x_offset, y_offset, width, height, &pixel_slice);
             }
         }
-        ctx.apply_pipeline(&self.pipeline);
-        ctx.apply_bindings(&self.bindings);
         ctx.draw(0, 6, 1);
         ctx.end_render_pass();
         ctx.commit_frame();

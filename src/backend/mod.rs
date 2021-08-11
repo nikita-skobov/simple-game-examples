@@ -46,8 +46,8 @@ pub trait Backend<T: GameLoop> {
     fn start(_conf: BackendConf, _game_loop: T) where Self: Sized + 'static {}
 }
 
-pub enum TextureUpdate {
+pub enum TextureUpdate<'a> {
     None,
-    UpdateWhole(Vec<u8>),
+    UpdateWhole(&'a [u8]),
     UpdatePart(i32, i32, i32, i32, Vec<u8>),
 }
