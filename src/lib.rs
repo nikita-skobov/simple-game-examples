@@ -105,4 +105,23 @@ impl Canvas {
             self.set_pixel_from_index(red_index, color);
         }
     }
+
+    pub fn draw_diagonal_line(&mut self, x1: usize, y1: usize, x2: usize, y2: usize, color: Rgb) {
+        let distance_x = x2 - x1;
+        let distance_y = y2 - y1;
+        let num_steps = if distance_x > distance_y {
+            distance_x
+        } else {
+            distance_y
+        };
+        let step_x = distance_x as f32 / num_steps as f32;
+        let step_y = distance_y as f32 / num_steps as f32;
+        let mut next_x = x1 as f32;
+        let mut next_y = y1 as f32;
+        for _ in 0..num_steps {
+            self.set_pixel(next_x as usize, next_y as usize, color);
+            next_x += step_x;
+            next_y += step_y;
+        }
+    }
 }
