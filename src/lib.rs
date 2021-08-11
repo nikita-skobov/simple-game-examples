@@ -82,6 +82,10 @@ impl Canvas {
         (self.width, self.height, self.data)
     }
 
+    pub fn access_data(&self) -> &[u8] {
+        &self.data
+    }
+
     pub fn draw_horizontal_line(&mut self, y: usize, x1: usize, x2: usize, color: Rgb) {
         let span = self.span();
         let y_offset = y * span;
