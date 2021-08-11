@@ -61,6 +61,10 @@ impl<T: GameLoop> Backend<T> for MQBackend<T> {
             UserData::owning(init_obj, ctx)
         });
     }
+
+    fn bytes_per_pixel() -> usize {
+        4
+    }
 }
 
 impl<T: GameLoop> MQBackend<T> {
@@ -80,7 +84,8 @@ impl<T: GameLoop> MQBackend<T> {
         let (width, height) = ctx.screen_size();
         let (width, height) = (width as usize, height as usize);
         let mut game_loop = game_loop;
-        let pixels = game_loop.init_canvas(width, height);
+        let bpp = <MQBackend<T> as Backend<T>>::bytes_per_pixel();
+        let pixels = game_loop.init_canvas(width, height, bpp);
         let screen_width = width as u16;
         let screen_height = height as u16;
         let texture = Texture::from_rgba8(ctx, screen_width, screen_height, &pixels);

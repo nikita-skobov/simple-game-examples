@@ -28,8 +28,8 @@ impl GameLoop for MyGameLoop {
         backend::TextureUpdate::UpdateWhole(&self.data)
     }
 
-    fn init_canvas(&mut self, width: usize, height: usize) -> Vec<u8> {
-        let data = vec![0; width * height * 4];
+    fn init_canvas(&mut self, width: usize, height: usize, bpp: usize) -> Vec<u8> {
+        let data = vec![0; width * height * bpp];
         self.data = data.clone();
         self.red = 255;
         self.width = width;

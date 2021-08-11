@@ -28,11 +28,11 @@ impl GameLoop for MyGameLoop {
 fn main() {
     let my_loop = MyGameLoop::default();
     let my_conf = BackendConf {
-        window_title: "hello world!".into(),
+        window_title: "hello_world".into(),
         window_width: 800,
         window_height: 600,
         fullscreen: false,
         window_resizable: true,
     };
-    backend::MQBackend::start(my_conf, my_loop);
+    backend::ImageBackend::start(my_conf, my_loop);
 }

@@ -1,6 +1,9 @@
 pub mod b_miniquad;
 pub use b_miniquad::*;
 
+pub mod b_image;
+pub use b_image::*;
+
 /// copied from miniquad Conf and modified to remove
 /// parts that arent relevant to us.
 #[derive(Debug)]
@@ -39,11 +42,12 @@ impl Default for BackendConf {
 pub trait GameLoop {
     fn update(&mut self);
     fn draw(&mut self) -> TextureUpdate;
-    fn init_canvas(&mut self, width: usize, height: usize) -> Vec<u8>;
+    fn init_canvas(&mut self, width: usize, height: usize, bpp: usize) -> Vec<u8>;
 }
 
 pub trait Backend<T: GameLoop> {
     fn start(_conf: BackendConf, _game_loop: T) where Self: Sized + 'static {}
+    fn bytes_per_pixel() -> usize;
 }
 
 pub enum TextureUpdate<'a> {
