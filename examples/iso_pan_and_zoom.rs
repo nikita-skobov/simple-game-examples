@@ -239,7 +239,7 @@ impl GameLoop for MyGameLoop {
             self.canvas.pan_to(self.mouse_x, self.mouse_y);
         }
 
-        let (mouse_after_x, mouse_after_y) = self.canvas.handle_scroll(
+        let (_mouse_after_x, _mouse_after_y) = self.canvas.handle_scroll(
             (self.mouse_x, self.mouse_y),
             self.is_scrolling_up, self.is_scrolling_down
         );

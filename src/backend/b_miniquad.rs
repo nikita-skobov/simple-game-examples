@@ -16,8 +16,8 @@ struct Vertex {
 pub struct MQBackend<T: GameLoop> {
     pipeline: Pipeline,
     bindings: Bindings,
-    screen_width: u16,
-    screen_height: u16,
+    pub screen_width: u16,
+    pub screen_height: u16,
     game_loop: T,
     events: Vec<Event>,
 }

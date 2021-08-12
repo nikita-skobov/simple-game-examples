@@ -14,10 +14,10 @@ impl GameLoop for MyGameLoop {
                 Event::MouseMove { x, y } => {
                     self.current_mouse_pos = (x, y);
                 }
-                Event::KeyDown { modifier, code, repeated } => {
+                Event::KeyDown { modifier: _, code, repeated: _ } => {
                     self.current_held_key = Some(code);
                 }
-                Event::KeyUp { modifier, code } => {
+                Event::KeyUp { modifier: _, code: _ } => {
                     self.current_held_key = None;
                 }
                 _ => {}

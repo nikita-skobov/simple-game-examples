@@ -179,8 +179,6 @@ pub struct MyGameLoop {
     canvas: Canvas,
     map: GameMap,
     mouse_position: (f32, f32),
-    screen_width: usize,
-    screen_height: usize,
 }
 
 impl GameLoop for MyGameLoop {
@@ -235,8 +233,6 @@ impl GameLoop for MyGameLoop {
     fn init_canvas(&mut self, width: usize, height: usize, bpp: usize) -> Vec<u8> {
         let color = Rgb::WHITE;
         let mut new_canvas = Canvas::new_with_color(width, height, color, bpp);
-        self.screen_width = width;
-        self.screen_height = height;
 
         for y in 0..self.map.map_size.1 {
             for x in 0..self.map.map_size.0 {
