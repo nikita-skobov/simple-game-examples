@@ -2,6 +2,7 @@ use draw::Draw;
 
 pub mod backend;
 pub mod draw;
+pub mod world_screen;
 
 #[derive(Default)]
 pub struct Canvas {
@@ -180,5 +181,17 @@ impl draw::Draw for Canvas {
             next_x += step_x;
             next_y += step_y;
         }
+    }
+
+    fn draw_horizontal_line_f32(&mut self, y: f32, x1: f32, x2: f32, color: Rgb) {
+        self.draw_horizontal_line(y as usize, x1 as usize, x2 as usize, color)
+    }
+
+    fn draw_vertical_line_f32(&mut self, x: f32, y1: f32, y2: f32, color: Rgb) {
+        self.draw_vertical_line(x as usize, y1 as usize, y2 as usize, color)
+    }
+
+    fn draw_diagonal_line_f32(&mut self, x1: f32, y1: f32, x2: f32, y2: f32, color: Rgb) {
+        self.draw_diagonal_line(x1 as usize, y1 as usize, x2 as usize, y2 as usize, color)
     }
 }

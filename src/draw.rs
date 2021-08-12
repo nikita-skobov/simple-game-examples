@@ -16,4 +16,11 @@ pub trait Draw {
     fn draw_vertical_line(&mut self, x: usize, y1: usize, y2: usize, color: Rgb);
 
     fn draw_diagonal_line(&mut self, x1: usize, y1: usize, x2: usize, y2: usize, color: Rgb);
+
+
+    fn draw_horizontal_line_f32(&mut self, y: f32, x1: f32, x2: f32, color: Rgb);
+
+    fn draw_vertical_line_f32(&mut self, x: f32, y1: f32, y2: f32, color: Rgb);
+
+    fn draw_diagonal_line_f32(&mut self, x1: f32, y1: f32, x2: f32, y2: f32, color: Rgb);
 }
