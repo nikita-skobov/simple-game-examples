@@ -1,6 +1,7 @@
 use simple_game_examples::backend;
 use simple_game_examples::{Rgb, Canvas};
 use backend::{GameLoop, Backend, BackendConf, Event};
+use simple_game_examples::draw::Draw;
 
 #[derive(Default)]
 pub struct MyGameLoop {

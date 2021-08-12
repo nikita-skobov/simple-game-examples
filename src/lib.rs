@@ -1,4 +1,7 @@
+use draw::Draw;
+
 pub mod backend;
+pub mod draw;
 
 #[derive(Default)]
 pub struct Canvas {
@@ -97,7 +100,13 @@ impl Canvas {
         canvas
     }
 
-    pub fn fill(&mut self, color: Rgb) {
+    pub fn into_raw(self) -> (usize, usize, Vec<u8>) {
+        (self.width, self.height, self.data)
+    }
+}
+
+impl draw::Draw for Canvas {
+    fn fill(&mut self, color: Rgb) {
         let span = self.span();
         for i in 0..self.width {
             for j in 0..self.height {
@@ -112,27 +121,23 @@ impl Canvas {
     /// red_index should be the index of the data vector for
     /// a red value of the pixel we wish to set.
     #[inline(always)]
-    pub fn set_pixel_from_index(&mut self, red_index: usize, color: Rgb) {
+    fn set_pixel_from_index(&mut self, red_index: usize, color: Rgb) {
         self.data[red_index] = color.red;
         self.data[red_index + 1] = color.green;
         self.data[red_index + 2] = color.blue;
     }
 
-    pub fn set_pixel(&mut self, x: usize, y: usize, color: Rgb) {
+    fn set_pixel(&mut self, x: usize, y: usize, color: Rgb) {
         if x >= self.width || y >= self.height { return; }
         let red_index = get_red_index!(self, x, y);
         self.set_pixel_from_index(red_index, color);
     }
 
-    pub fn into_raw(self) -> (usize, usize, Vec<u8>) {
-        (self.width, self.height, self.data)
-    }
-
-    pub fn access_data(&self) -> &[u8] {
+    fn access_data(&self) -> &[u8] {
         &self.data
     }
 
-    pub fn draw_horizontal_line(&mut self, y: usize, x1: usize, x2: usize, color: Rgb) {
+    fn draw_horizontal_line(&mut self, y: usize, x1: usize, x2: usize, color: Rgb) {
         let span = self.span();
         let y_offset = y * span;
         for i in x1..x2 {
@@ -142,7 +147,7 @@ impl Canvas {
         }
     }
 
-    pub fn draw_vertical_line(&mut self, x: usize, y1: usize, y2: usize, color: Rgb) {
+    fn draw_vertical_line(&mut self, x: usize, y1: usize, y2: usize, color: Rgb) {
         let span = self.span();
         let x_offset = x * self.bpp;
         for j in y1..y2 {
@@ -152,7 +157,7 @@ impl Canvas {
         }
     }
 
-    pub fn draw_diagonal_line(&mut self, x1: usize, y1: usize, x2: usize, y2: usize, color: Rgb) {
+    fn draw_diagonal_line(&mut self, x1: usize, y1: usize, x2: usize, y2: usize, color: Rgb) {
         let (distance_x, negative_x) = if x2 > x1 {
             (x2 - x1, false)
         } else { (x1 - x2, true) };

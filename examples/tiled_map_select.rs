@@ -1,6 +1,7 @@
 use simple_game_examples::backend;
 use simple_game_examples::{Rgb, Canvas, Point, LineSegment};
 use backend::{GameLoop, Backend, BackendConf, Event};
+use simple_game_examples::draw::Draw;
 
 #[derive(Debug, Default)]
 pub struct Tile {
