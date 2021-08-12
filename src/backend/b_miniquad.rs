@@ -109,6 +109,18 @@ impl<T: GameLoop> EventHandler for MQBackend<T> {
         self.events.push(event);
     }
 
+    fn mouse_wheel_event(
+        &mut self,
+        _ctx: &mut Context,
+        _x: f32,
+        y: f32
+    ) {
+        let event = Event::MouseScroll {
+            up: y > 0.0,
+        };
+        self.events.push(event);
+    }
+
     fn mouse_motion_event(
         &mut self,
         _ctx: &mut Context,
